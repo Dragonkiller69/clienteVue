@@ -3,22 +3,19 @@ import Axios from 'axios'
 export default class RestMethods {
     constructor() {
         this.baseUri = 'http://localhost:8080/server/resources/'
-        this.cuentas = null
+        this.json = null
     }
 
     getJson(resource) {
-        console.log(this.baseUri + resource);
         if (resource != null) {
             Axios.get(this.baseUri + resource)
             .then(response => {
-                this.cuentas = response.data;
+                this.json = response.data;
 
-                console.log(this.cuentas);
+                console.log(this.json);
             });
-        return this.cuentas;
+        return this.json;
         }
-       
-
     }
 
     postJson(resource, registro) {
@@ -28,7 +25,14 @@ export default class RestMethods {
                 console.log(response);
               })
         }
-       
+    }
 
+    deleteJson(resource, id){
+        if (resource != null && id != null) {
+            Axios.delete(this.baseUri + resource, {data: id})
+            .then( response => {
+                console.log(response);
+            })
+        }
     }
 }

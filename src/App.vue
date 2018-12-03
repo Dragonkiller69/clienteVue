@@ -1,64 +1,46 @@
 <template>
   <div id="app">
-    <button @click="getCuentas()">Get</button>
-
-    <form>
-      <p>
-        Codigo Cuenta:
-        <input type="text" name="codigoCuenta">
-        <br>Descripcion:
-        <input type="text" name="descripcion">
-        <br>Padre:
-        <select name="cuentaPadre">
-          <option v-for="(cuenta, index) in cuentas" :value="cuenta" :key="index" @click="cuentaPadre(cuenta)">{{cuenta.nombre}}</option>
-        </select>
-        <br>Nombre:
-        <input type="text" name="nombre"><br>
-        <input type="submit" @click="postCuentas($event)" value="Crear">
-      </p>
-    </form>
-    <div v-for="(cuenta, index) in cuentas" :key="index">{{cuenta.codigoCuenta}} {{cuenta.nombre}} 
-    </div>
+    <v-toolbar fixed dark color="#283593">
+      <v-toolbar-side-icon></v-toolbar-side-icon>
+      <v-toolbar-title>Sistema Contable</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-items class="hidden-sm-and-down">
+        <v-btn flat @click="diario = !diario">Libro Diario</v-btn>
+        <v-btn flat @click="catalogo = !catalogo">Catalogo Contable</v-btn>
+        <v-btn flat >Balance de Comprobacion</v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+    <v-app>
+    <rest-table v-show="diario"></rest-table>
+    <table-crud v-show="catalogo"></table-crud>
+    <balance-comprobacion></balance-comprobacion>
+    </v-app>
   </div>
 </template>
 
 <script>
 import RestMethods from "./RestMethods.js";
+import Table from "./components/Table.vue";
+import TableCRUD from "./components/TableCRUD.vue";
+import BalanceComprobacion from "./components/BalanceComprobacion.vue";
 const rest = new RestMethods();
 export default {
+  components: {
+    "rest-table": Table,
+    "table-crud": TableCRUD,
+    "balance-comprobacion": BalanceComprobacion
+  },
   data() {
     return {
-      cuentas: null,
-      cuenta: null
+      catalogo: false,
+      diario: false,
     };
   },
   computed: {
-    
+
   },
   methods: {
-    getCuentas() {
-      this.cuentas = rest.getJson("cuenta");
-      console.log(this.cuentas + "hola");
-    },
-    postCuentas(event) {
-      event.preventDefault();
-      let formData = new FormData(event.target.parentNode.parentNode);
-      let json = {};
-      formData.forEach((value, key) => {
-        if (value === '[object Object]') {
-           json[key] = JSON.parse(this.cuenta);
-        }else{
-          json[key] = value;
-        }
-      });
-      console.log(json);
-      if (json != null) {
-        rest.postJson('cuenta', json)
-      }
-    },
-    cuentaPadre(cuentaPadre) {
-      this.cuenta = JSON.stringify(cuentaPadre);
-    }
+    
   }
 };
 </script>
