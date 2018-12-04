@@ -121,12 +121,10 @@ export default {
       val || this.close();
     }
   },
-
   created() {
     this.getCuentas();
     this.cuentas = [];
   },
-
   methods: {
     getCuentas() {
       this.cuentas = rest.getJson("cuenta");

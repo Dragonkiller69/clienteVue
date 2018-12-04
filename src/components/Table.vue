@@ -1,6 +1,8 @@
 <template>
   <div>
-    <v-toolbar flat color="white">
+    
+    <div class="container tablita">
+      <v-toolbar flat color="white">
       <v-toolbar-title>Libro Diario</v-toolbar-title>
       <v-divider class="mx-2" inset vertical></v-divider>
       <v-spacer></v-spacer>
@@ -53,7 +55,7 @@
                   <v-combobox
                     name="idAbono"
                     return-object
-                    v-model="cuentaCargo"
+                    v-model="cuentaAbono"
                     :items="cuentas"
                     item-text="nombre"
                     label="Cuenta Abono"
@@ -61,7 +63,7 @@
                   <v-combobox
                     name="idCargo"
                     return-object
-                    v-model="cuentaAbono"
+                    v-model="cuentaCargo"
                     :items="cuentas"
                     item-text="nombre"
                     label="Cuenta Cargo"
@@ -84,8 +86,8 @@
         </v-card>
       </v-dialog>
     </v-toolbar>
-    <div class="container tablita">
-      <table class="table table-striped table-hover">
+    <v-card ripple="true">
+      <table class="table  table-hover">
         <thead>
           <tr>
             <th>Fecha</th>
@@ -114,6 +116,7 @@
           </template>
         </tbody>
       </table>
+    </v-card>
     </div>
   </div>
 </template>
