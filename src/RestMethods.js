@@ -27,9 +27,22 @@ export default class RestMethods {
         }
     }
 
+    putJson(resource, registro) {
+        if (resource != null && registro != null, {headers: {"Content-Type": "application/json"}}) {
+            Axios.put(this.baseUri + resource, registro)
+              .then( response => {
+                console.log(response);
+              })
+        }
+    }
+
     deleteJson(resource, id){
         if (resource != null && id != null) {
-            Axios.delete(this.baseUri + resource, {data: id})
+            Axios.delete(this.baseUri + resource + id, {headers:{
+                "Origin": "http://localhost:8081/",
+                "Access-Control-Request-Method": "DELETE",
+                "Access-Control-Request-Headers": "Content-Type"
+         }})
             .then( response => {
                 console.log(response);
             })

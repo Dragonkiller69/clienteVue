@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="container">
       <v-toolbar flat color="white">
         <v-toolbar-title>Catalogo Contable</v-toolbar-title>
         <v-divider class="mx-2" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <v-btn @click="getCuentas()">get</v-btn>
         <v-dialog v-model="dialog" max-width="500px">
-          <v-btn slot="activator" color="primary" dark class="mb-2">Agregar Cuenta</v-btn>
+          <v-btn slot="activator" color="primary" dark class="mb-2" value="post" v-model="putPost" >Agregar Cuenta</v-btn>
           <v-card>
             <v-card-title>
               <span class="headline">Nueva Cuenta</span>
@@ -66,7 +66,7 @@
           <td class="text-xs"><h4>{{ props.item.descripcion }}</h4></td>
           <td class="justify-center layout px-0">
             <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-            <v-icon small >delete</v-icon>
+            <v-icon small @click="deleteItem(props.item)">delete</v-icon>
           </td>
         </template>
       </v-data-table>
@@ -97,7 +97,7 @@ export default {
       { text: "Nombre", value: "nombre" },
       { text: "Descripcion", value: "descripcion" }
     ],
-    editedIndex: -1,
+    putPost: 'post',
     editedItem: {}
   }),
 
@@ -134,7 +134,9 @@ export default {
         let formData = new FormData(document.getElementById("formulario"));
         let json = {};
         formData.forEach((value, key) => {
-          if (key === "cuentaPadre") {
+          
+          if (key === "cuentaPadre" ) {
+            console.log(this.cuentaParent)
             json[key] = JSON.parse(this.cuentaParent);
           } else {
             json[key] = value;
@@ -142,8 +144,10 @@ export default {
         });
         console.log(json);
         this.close();
-        if (json != null) {
+        if (json != null && this.putPost === 'post') {
             rest.postJson('cuenta', json)
+        } else if(json != null && this.putPost === 'put'){
+          rest.putJson('cuenta', json)
         }
       }
     },
@@ -154,13 +158,15 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.cuenta = this.editedItem.cuentaPadre;
       this.dialog = true;
+      this.putPost = 'put';
+      console.log(this.putPost)
     },
 
     deleteItem(item) {
       const index = item.codigoCuenta
       console.log(index)
       confirm("Are you sure you want to delete this item?") &&
-        rest.deleteJson('cuenta', index);
+        rest.deleteJson('cuenta/', index);
     },
 
     close() {
